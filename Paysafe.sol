@@ -5,7 +5,7 @@ pragma solidity >=0.8.0 <0.9.0;
 
 //AMOUNTS ARE GIVEN AND STORED IN WEI
 
-// Version 0x01
+// Version 0x02
 
 import "./Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -18,7 +18,7 @@ contract PaySafe is Ownable {
         PENDING,
         PAID
     }
-
+    
     struct Payment {
         PaymentState state;
         address from;
@@ -26,7 +26,7 @@ contract PaySafe is Ownable {
         uint amount;
         uint bail;
     }
-
+    
     using Counters for Counters.Counter;
     Counters.Counter private idCounter;
 
@@ -39,61 +39,65 @@ contract PaySafe is Ownable {
     function createPayment(address to, uint amount, uint bail) public payable returns(uint){
         require(msg.value >= (amount + bail), "Error: Insufficient funds deposited (needs amout + bail)");
         require(msg.sender != to, "Error: You cannot send yourself money");
-        Payment memory payment = Payment({
+        uint id = idCounter.current();
+        payments[id] = Payment({
             state: PaymentState.INDEXED,
             from: msg.sender,
             to: to,
             amount: amount,
             bail: bail
         });
-        uint id = idCounter.current();
-        payments[id] = payment;
         idCounter.increment();
         payable(address(tx.origin)).transfer(msg.value - (amount + bail));
         return id;
     }
 
-    function deposit(uint id) public payable {
+    function deposit(uint id) public payable returns(Payment memory) {
         require(msg.sender == payments[id].to, "Error: No deposit accepted here");
         require(payments[id].state == PaymentState.INDEXED, "Error: You already paid or this payment got revoked");
         require(msg.value >= payments[id].bail, "Error: Insufficient funds deposited");
-        payments[id].state == PaymentState.PENDING;
+        Payment memory payment = payments[id];
+        payment.state = PaymentState.PENDING;
         payable(address(tx.origin)).transfer(msg.value - payments[id].bail);
+        payments[id] = payment;
+        return payment;
     }
 
-    function revoke(uint id) public {
-        require(msg.sender == payments[id].from || msg.sender == payments[id].to, "Error: You are not a part of this payment");
-        require(payments[id].state == PaymentState.INDEXED || payments[id].state == PaymentState.PENDING, "Error: Payment already completed/revoked");
-        if (msg.sender == payments[id].from) {
-            require(payments[id].state == PaymentState.INDEXED, "Error: Payment in process");
-            payments[id].state = PaymentState.REVOKED;
-            payable(address(payments[id].from)).transfer(payments[id].amount + payments[id].bail);
-        } else if (msg.sender == payments[id].to) {
-            if(payments[id].state == PaymentState.PENDING) {
-                payable(address(payments[id].to)).transfer(payments[id].bail);
+    function revoke(uint id) public returns(Payment memory) {
+        Payment memory payment = payments[id];
+        require(msg.sender == payment.from || msg.sender == payment.to, "Error: You are not a part of this payment");
+        require(payment.state == PaymentState.INDEXED || payment.state == PaymentState.PENDING, "Error: Payment already completed/revoked");
+        if (msg.sender == payment.from) {
+            require(payment.state == PaymentState.INDEXED, "Error: Payment in process");
+            payment.state = PaymentState.REVOKED;
+            payable(address(payment.from)).transfer(payment.amount + payment.bail);
+        } else if (msg.sender == payment.to) {
+            if(payment.state == PaymentState.PENDING) {
+                payable(address(payment.to)).transfer(payment.bail);
             }
-            payments[id].state = PaymentState.REVOKED;
-            payable(address(payments[id].from)).transfer(payments[id].amount + payments[id].bail);
+            payment.state = PaymentState.REVOKED;
+            payable(address(payment.from)).transfer(payment.amount + payment.bail);
         }
+        payments[id] = payment;
+        return payment;
     }
 
-    function confirm(uint id) public {
-        require(msg.sender == payments[id].from, "Error: You can't confirm this payment");
-        require(payments[id].state == PaymentState.PENDING, "Error: This Payment is not confirmable.");
-        payments[id].state = PaymentState.PAID;
-        payable(address(payments[id].from)).transfer(payments[id].bail);
-        payable(address(payments[id].to)).transfer(payments[id].bail + payments[id].amount);
-    }
-
-    function getPayment(uint id) public view returns(Payment memory) {
+    function confirm(uint id) public returns(Payment memory) {
+        Payment memory payment = payments[id];
+        require(msg.sender == payment.from, "Error: You can't confirm this payment");
+        require(payment.state == PaymentState.PENDING, "Error: This Payment is not confirmable.");
+        payment.state = PaymentState.PAID;
+        payable(address(payment.from)).transfer(payments[id].bail);
+        payable(address(payment.to)).transfer(payments[id].bail + payments[id].amount);
+        payments[id] = payment;
         return payments[id];
     }
 
-    function getPayments() public view returns (Payment[] memory){
-        Payment[] memory ret = new Payment[](idCounter.current());
-        for (uint i = 0; i < idCounter.current(); i++) {
-            ret[i] = payments[i];
-        }
-        return ret;
+    function getPayment(uint id) external view returns(Payment memory) {
+        return payments[id];
+    }
+
+    function lastID() external view returns(uint) {
+        return idCounter.current() - 1;
     }
 }
