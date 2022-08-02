@@ -8,7 +8,7 @@ pragma solidity >=0.8.0 <0.9.0;
 // Version 0x02
 
 import "./Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "./Counters.sol";
 
 contract PaySafe is Ownable {
 
