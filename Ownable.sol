@@ -29,7 +29,6 @@ contract Ownable {
         emit OwnershipTransfer(oldOwner, owner);
     }
 
-    //Thanks c:
     function donate() public payable {}
     
     function getOwner() public view returns(address) {
