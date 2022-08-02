@@ -23,6 +23,12 @@ contract Ownable {
         payable(owner).transfer(address(this).balance);
     }
 
+    function transferOwnership(address newOwner) public onlyOwner {
+        address oldOwner = owner;
+        owner = newOwner;
+        emit OwnershipTransfer(oldOwner, owner);
+    }
+
     //Thanks c:
     function donate() public payable {}
     
