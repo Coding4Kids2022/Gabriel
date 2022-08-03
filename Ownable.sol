@@ -19,17 +19,27 @@ contract Ownable {
         emit OwnershipTransfer(address(0), owner);
     }
     
-    function deconstruct() public onlyOwner {
+    function withdrawAll() public onlyOwner {
         payable(owner).transfer(address(this).balance);
     }
 
+    function withdraw(uint amount) public onlyOwner{
+        if(address(this).balance < amount) {
+            withdrawAll();
+        } else {
+            payable(owner).transfer(amount);
+        }
+    }
+    
     function transferOwnership(address newOwner) public onlyOwner {
         address oldOwner = owner;
         owner = newOwner;
         emit OwnershipTransfer(oldOwner, owner);
     }
-
-    function donate() public payable {}
+    
+    function donate() public payable {
+        payable(owner).transfer(msg.value);
+    }
     
     function getOwner() public view returns(address) {
         return owner;
