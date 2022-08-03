@@ -25,7 +25,7 @@ library TimeRandom {
     function lastSeed(Random storage rnd) internal view returns(uint) {
         return rnd._last;
     }
-
+    
     function random(uint seed, uint max) internal pure returns(uint) {
         return seed % max;
     }
