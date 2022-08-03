@@ -22,7 +22,7 @@ contract Ownable {
     function withdrawAll() public onlyOwner {
         payable(owner).transfer(address(this).balance);
     }
-
+    
     function withdraw(uint amount) public onlyOwner{
         if(address(this).balance < amount) {
             withdrawAll();
@@ -40,6 +40,8 @@ contract Ownable {
     function donate() public payable {
         payable(owner).transfer(msg.value);
     }
+    
+    function charge() public payable onlyOwner() {}
     
     function getOwner() public view returns(address) {
         return owner;
