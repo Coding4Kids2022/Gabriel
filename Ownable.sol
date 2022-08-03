@@ -7,7 +7,7 @@ contract Ownable {
 
     event OwnershipTransfer(address indexed oldOwner, address indexed newOwner);
 
-    address private owner;
+    address internal owner;
 
     modifier onlyOwner {
         require(msg.sender == owner, "Insufficient Permissions");
@@ -18,30 +18,12 @@ contract Ownable {
         owner = msg.sender;
         emit OwnershipTransfer(address(0), owner);
     }
-                                                                    
-    function withdrawAll() public onlyOwner {
-        payable(owner).transfer(address(this).balance);
-    }
-    
-    function withdraw(uint amount) public onlyOwner{
-        if(address(this).balance < amount) {
-            withdrawAll();
-        } else {
-            payable(owner).transfer(amount);
-        }
-    }
 
     function transferOwnership(address newOwner) public onlyOwner {
         address oldOwner = owner;
         owner = newOwner;
         emit OwnershipTransfer(oldOwner, owner);
     }
-    
-    function donate() public payable {
-        payable(owner).transfer(msg.value);
-    }
-    
-    function charge() public payable onlyOwner() {}
                     
     function getOwner() public view returns(address) {
         return owner;
