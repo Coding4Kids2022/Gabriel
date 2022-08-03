@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
+pragma solidity >=0.8.0 <0.9.0;
+
 import "./Ownable.sol";
 
 contract CashFlow is Ownable {
@@ -35,12 +37,12 @@ contract CashFlow is Ownable {
     function donate() public payable {
         require(config.publicDonations, "Insufficient Permissions");
         if (config.publicDonations) {
-            payable(super.owner).transfer(msg.value);
+            payable(super.getOwner()).transfer(msg.value);
         }
     }
 
     function charge() public payable {
-        if(msg.sender != super.owner) {
+        if(msg.sender != super.getOwner()) {
             require(config.publicCharging, "Insufficient Permissions");
         }
     }
@@ -49,11 +51,11 @@ contract CashFlow is Ownable {
         if(address(this).balance < amount) {
             withdrawAll();
         } else {
-            payable(super.owner).transfer(amount);
+            payable(super.getOwner()).transfer(amount);
         }
     }
 
     function withdrawAll() public onlyOwner {
-        payable(super.owner).transfer(address(this).balance);
+        payable(super.getOwner()).transfer(address(this).balance);
     }
 }

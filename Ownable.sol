@@ -13,7 +13,7 @@ contract Ownable {
         require(msg.sender == owner, "Insufficient Permissions");
         _;
     }
-                                    
+
     constructor() {
         owner = msg.sender;
         emit OwnershipTransfer(address(0), owner);
@@ -24,7 +24,7 @@ contract Ownable {
         owner = newOwner;
         emit OwnershipTransfer(oldOwner, owner);
     }
-                    
+
     function getOwner() public view returns(address) {
         return owner;
     }
