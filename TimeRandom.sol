@@ -31,6 +31,6 @@ library TimeRandom {
     }
 
     function random(uint seed, uint min, uint max) internal pure returns(uint) {
-        return random(seed, min - max) + min;
+        return random(seed, max - min) + min;
     }
 }
