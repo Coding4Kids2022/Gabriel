@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
+// CashFlow 0x01 03.08.2022
+
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./Ownable.sol";
@@ -43,7 +45,7 @@ contract CashFlow is Ownable {
 
     function charge() public payable {
         if(msg.sender != super.getOwner()) {
-            require(config.publicCharging, "Insufficient Permissions");
+            require(config.publicCharging, "Error: Unable to charge contract");
         }
     }
 

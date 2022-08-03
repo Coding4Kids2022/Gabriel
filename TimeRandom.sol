@@ -3,6 +3,8 @@
 
 pragma solidity >=0.8.0 <0.9.0;
 
+// TimeRandom 0x01 03.08.2022
+
 library TimeRandom {
 
     struct Random {

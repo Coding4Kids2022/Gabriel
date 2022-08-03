@@ -1,16 +1,21 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
+// PaySafe 0x01 03.08.2022
+
 pragma solidity >=0.8.0 <0.9.0;
 
-//AMOUNTS ARE GIVEN AND STORED IN WEI
+import "./UncheckedCounter.sol";
+import "./CashFlow.sol";
 
-// Version 0x02
-
-import "./Ownable.sol";
-import "./Counters.sol";
-
-contract PaySafe is Ownable {
+contract PaySafe is CashFlow
+(
+    CashFlow.Config({
+        publicDonations: true,
+        publicCharging: false
+    })
+)
+{
 
     enum PaymentState {
         INDEXED,
@@ -18,7 +23,7 @@ contract PaySafe is Ownable {
         PENDING,
         PAID
     }
-    
+
     struct Payment {
         PaymentState state;
         address from;
@@ -26,17 +31,17 @@ contract PaySafe is Ownable {
         uint amount;
         uint bail;
     }
-    
-    using Counters for Counters.Counter;
-    Counters.Counter private idCounter;
+
+    using UncheckedCounter for UncheckedCounter.Counter;
+    UncheckedCounter.Counter private idCounter;
 
     mapping(uint => Payment) public payments;
 
     constructor() {
-        //idCounter = Counter();
+
     }
 
-    function createPayment(address to, uint amount, uint bail) public payable returns(uint){
+    function createPayment(address to, uint amount, uint bail) public payable cashFlow returns(uint) {
         require(msg.value >= (amount + bail), "Error: Insufficient funds deposited (needs amout + bail)");
         require(msg.sender != to, "Error: You cannot send yourself money");
         uint id = idCounter.current();
@@ -52,7 +57,7 @@ contract PaySafe is Ownable {
         return id;
     }
 
-    function deposit(uint id) public payable returns(Payment memory) {
+    function deposit(uint id) public payable cashFlow returns(Payment memory) {
         require(msg.sender == payments[id].to, "Error: No deposit accepted here");
         require(payments[id].state == PaymentState.INDEXED, "Error: You already paid or this payment got revoked");
         require(msg.value >= payments[id].bail, "Error: Insufficient funds deposited");
