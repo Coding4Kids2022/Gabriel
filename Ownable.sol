@@ -13,12 +13,12 @@ contract Ownable {
         require(msg.sender == owner, "Insufficient Permissions");
         _;
     }
-    
+                                    
     constructor() {
         owner = msg.sender;
         emit OwnershipTransfer(address(0), owner);
     }
-    
+                                                                    
     function withdrawAll() public onlyOwner {
         payable(owner).transfer(address(this).balance);
     }
@@ -30,7 +30,7 @@ contract Ownable {
             payable(owner).transfer(amount);
         }
     }
-    
+
     function transferOwnership(address newOwner) public onlyOwner {
         address oldOwner = owner;
         owner = newOwner;
@@ -42,8 +42,9 @@ contract Ownable {
     }
     
     function charge() public payable onlyOwner() {}
-    
+                    
     function getOwner() public view returns(address) {
         return owner;
     }
 }
+    
