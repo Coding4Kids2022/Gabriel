@@ -17,20 +17,20 @@ library UncheckedCounter {
         increment(counter, 1);
     }
 
-    function increment(Counter storage counter, uint memory by) internal {
-        unchecked {
-            counter.value += by;
-        }
+    function increment(Counter storage counter, uint by) internal {
+    unchecked {
+        counter._value += by;
+    }
     }
 
     function decrement(Counter storage counter) internal {
         decrement(counter, 1);
     }
 
-    function decrement(Counter storage counter, uint memory by) internal {
-        unchecked {
-            counter.value -= by;
-        }
+    function decrement(Counter storage counter, uint by) internal {
+    unchecked {
+        counter._value -= by;
+    }
     }
 
     function reset(Counter storage counter) internal {
