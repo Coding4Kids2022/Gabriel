@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
-pragma solidity >=0.8.0 <0.9.0;
-
 // UncheckedCounter 0x01 03.08.2022
+
+pragma solidity >=0.8.0 <0.9.0;
 
 library UncheckedCounter {
 
