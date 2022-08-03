@@ -18,7 +18,7 @@ contract Lottery is Ownable {
         require(min <= bet && bet <= max, "Number out of range");
         require(min != max, "Range can't be empty");
         if(TimeRandom.random(generator.nextSeed(), min, max) == bet) {
-            uint prize = (max - (min + 1)) * msg.value;
+            uint prize = (2 - 1/(max - min)) * msg.value;
             address winner = tx.origin;
             if(balance() < prize) {
                 prize = balance();
