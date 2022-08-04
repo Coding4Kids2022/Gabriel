@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
-// TimeRandom 0x01 03.08.2022
+// TimeRandom 0x02 03.08.2022
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -33,6 +33,6 @@ library TimeRandom {
     }
 
     function random(uint seed, uint min, uint max) internal pure returns(uint) {
-        return random(seed, max - min) + min;
+        return random(seed, max - min + 1) + min;
     }
 }
