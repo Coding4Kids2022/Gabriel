@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
-// Lottery 0x02 03.08.2022
+// Lottery 0x03 03.08.2022
 
 pragma solidity >=0.8.0 <0.9.0;
 
@@ -37,8 +37,8 @@ contract Lottery is CashFlow
     }
 
     function prize(uint amountBet, uint min, uint max) public pure returns(uint) {
-        uint range = max - min + 1;
-        return (range * range - range - 1) * amountBet / (range - 1);
+        uint range = max - min;
+        return range * amountBet;
     }
     
     function balance() public view returns(uint) {
