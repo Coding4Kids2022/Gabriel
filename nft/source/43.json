@@ -1,1 +1,1 @@
-{"description": "Hi, 25 Pixels in size (5x5) in two colors.","image": "https://raw.githubusercontent.com/Coding4Kids2022/Gabriel/main/nft/source/43.png","name": "43","attributes": []}
+{"description": "A yellow 'Hi' on a black background.", "image": "https://raw.githubusercontent.com/Coding4Kids2022/Gabriel/main/nft/source/43.json", "name":"43", "attributes": [{"trait_type": "motif", "value": "'Hi'"},{"trait_type": "color", "value": "yellow"},{"trait_type": "background", "value": "black"}]}
