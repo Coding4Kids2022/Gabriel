@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+      canvas {
+          height: 25px;
+          width: 25px;
+      }
+
+      body {
+          margin:0px;
+      }
+  </style>
+</head>
+<body id="body">
+
+<script>
+    let id = 0;
+    var imgData;
+    const body = document.getElementById("body");
+    setInterval(createPrint, 500);
+
+    function createPrint() {
+        let canvas = document.createElement("canvas");
+        canvas.setAttribute("width", "5");
+        canvas.setAttribute("height", "5");
+        print(canvas);
+        let image = document.createElement("img");
+        image.setAttribute("src", canvas.toDataURL());
+        body.appendChild(canvasX);
+        var anchor = document.createElement("a");
+        anchor.href = canvas.toDataURL("image/png");
+        anchor.download = id+".png";
+        anchor.click();
+        id++;
+    }
+    
+
+    function print(c) {
+        var ctx = c.getContext("2d");
+        imgData = ctx.createImageData(5,5);
+
+        const dataX = [[1, 0, 1, 0, 1],
+                        [1, 0, 1, 0, 0],
+                        [1, 1, 1, 0, 1],
+                        [1, 0, 1, 0, 1],
+                        [1, 0, 1, 0, 1]];
+
+        const colorA = randomColor();
+        const colorB = randomColor()
+
+        var i;
+
+        let color = randomColor();
+
+        for (row = 0; row < 25; row++) {
+            for (col = 0; col < 25; col++) {
+            if(dataX[row%5][col%5] === 0) {
+                draw(row, col, colorA[0], colorA[1], colorA[2], colorA[3]);
+            } else {
+                draw(row, col, colorB[0], colorB[1], colorB[2], colorB[3]);
+            }
+            }
+        }
+        ctx.putImageData(imgData, 0, 0)
+    }
+
+        function draw(x, y, r, g, b, a) {
+            pos = x * 20 + y * 4;
+            imgData.data[pos] = r;
+            imgData.data[pos + 1] = g;
+            imgData.data[pos + 2] = b;
+            imgData.data[pos + 3] = a;
+        }
+
+        function randomColor() {
+            return [randomNumber(255),
+                    randomNumber(255),
+                    randomNumber(255),
+                    255];
+        }
+
+        function randomNumber(max) {
+            return Math.floor(Math.random()*max);
+        }
+    </script>
+</body>
+</html>
