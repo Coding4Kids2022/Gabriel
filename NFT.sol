@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
-// NFT 0x02 01.08.2022
-
+// NFT 0x03 01.08.2022
+f
 pragma solidity >=0.8.0 <0.9.0;
 
-import "./CashFlow.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
