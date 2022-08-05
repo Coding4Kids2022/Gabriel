@@ -2,7 +2,7 @@
 // gabl22 @ github.com
 
 // NFT 0x03 01.08.2022
-f
+
 pragma solidity >=0.8.0 <0.9.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
