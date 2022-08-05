@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // gabl22 @ github.com
 
-// TimeRandom 0x01 01.08.2022
+// NFT 0x02 01.08.2022
 
 pragma solidity >=0.8.0 <0.9.0;
 
