@@ -22,6 +22,10 @@ contract Lottery is CashFlow
     TimeRandom.Random private generator = TimeRandom.Random({
         _last: 557940830126698960967415390
     });
+    
+    constructor() payable {
+    
+    }
 
    function betOn(uint min, uint bet, uint max) external payable cashFlow returns(uint) {
         require(min <= bet && bet <= max, "Error: Number out of range");
